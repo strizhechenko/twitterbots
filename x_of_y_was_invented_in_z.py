@@ -45,15 +45,18 @@ def get_phrase():
     # get_word(custom_tags=['Geox', 'Abbr'], blacklist=u"того")
     place = m.parse(choice(places))[0].inflect(["loct"])
     
-    if all((first_word, second_word, place)):
-        grammemes = [first_word.tag.number]
-        if 'plur' not in grammemes:
-            grammemes.append(first_word.tag.gender)
-        was = m.parse(u"был")[0].inflect(grammemes)
-        invented = m.parse(u"придуман")[0].inflect(grammemes)
+    if not all((first_word, second_word, place)):
+        return # maybe we need exception here
     
-        print template.format(first_word.word.capitalize(), second_word.word, was.word, invented.word, place.word).encode('utf-8')
+    grammemes = [first_word.tag.number]
+    if 'plur' not in grammemes:
+        grammemes.append(first_word.tag.gender)
+    
+    was = m.parse(u"был")[0].inflect(grammemes)
+    invented = m.parse(u"придуман")[0].inflect(grammemes)
+
+    return template.format(first_word.word.capitalize(), second_word.word, was.word, invented.word, place.word)
 
 
 if __name__ == '__main__':
-    get_phrase()
+    print get_phrase().encode('utf-8')
